@@ -1,4 +1,4 @@
-# sbus
+# pwm
 This library communicates with PWM servos. 
    * [License](LICENSE.md)
    * [Changelog](CHANGELOG.md)
@@ -74,7 +74,7 @@ pwm.Write();
 **void tx_channels(const std::array<uint16_t, N> &val)** Sets the channel data to be transmitted. Note that the length of the array should be the same as the number of pins.
 
 ```C++
-pwm.tx_channels(sbus_tx_data);
+pwm.tx_channels(pwm_tx_data);
 ```
 
 **std::array<uint16_t, N> tx_channels()** Returns the array of channel data to be transmitted. Note that the length of the returned array is the same as the number of pins.
