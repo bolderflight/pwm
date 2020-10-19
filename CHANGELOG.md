@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.3
+- Baselined on core v1.0.3
+
 ## v1.0.2
 - Updated CONTRIBUTING
 - Updated *flash_mcu.cmake* to use local loader for Linux
