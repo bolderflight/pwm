@@ -7,5 +7,5 @@ Lint:
     - bfs
     - mk66fx1m0
   script: 
-    - cpplint.py --verbose=0 --filter=-whitespace,-line_length include/pwm/pwm.h
+    - cpplint.py --verbose=0 include/pwm/pwm.h
   

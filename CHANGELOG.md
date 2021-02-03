@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.4
+- Updated for core v2.0.3
+
 ## v1.0.3
 - Baselined on core v1.0.3
 

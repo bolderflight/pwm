@@ -2,7 +2,7 @@
 * Brian R Taylor
 * brian.taylor@bolderflight.com
 * 
-* Copyright (c) 2020 Bolder Flight Systems
+* Copyright (c) 2021 Bolder Flight Systems
 */
 
 #ifndef INCLUDE_PWM_PWM_H_
@@ -28,7 +28,8 @@ class Pwm {
   }
   void Write() {
     for (std::size_t i = 0; i < N; i++) {
-      analogWrite(pins_[i], static_cast<float>(tx_channels_[i]) / pwm_period_us_ * MAX_PWM_VAL_);
+      analogWrite(pins_[i], static_cast<float>(tx_channels_[i]) /
+        pwm_period_us_ * MAX_PWM_VAL_);
     }
   }
   void frequency_hz(float val) {
@@ -48,7 +49,8 @@ class Pwm {
   /* PWM resolution */
   static constexpr int PWM_RESOLUTION_ = 16;
   /* PWM bits */
-  static constexpr float MAX_PWM_VAL_ = std::pow(2.0f, static_cast<float>(PWM_RESOLUTION_)) - 1.0f;
+  static constexpr float MAX_PWM_VAL_ =
+    std::pow(2.0f, static_cast<float>(PWM_RESOLUTION_)) - 1.0f;
   /* PWM frequency */
   float pwm_frequency_hz_ = 50;
   /* PWM period */
