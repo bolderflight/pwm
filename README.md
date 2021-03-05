@@ -35,15 +35,15 @@ These are known to work with the same packages used in Teensy products. Also swi
 The *pwm_example* target creates an executable for communicating with PWM servos. This target also has a *_hex* for creating the hex file to upload to the microcontroller. 
 
 # Namespaces
-The PWM object for sending commands to servos is within the namespace *actuators*.
+This library is within the namespace *bfs*
 
 # Methods
 
-**Pwm<int N>(std::array<int, N> pins)** Creates a Pwm object. This is a templated class with the number of PWM pins as a template parameter. The PWM pin numbers are passed as an array to the constructor.
+**PwmTx<int N>(std::array<int, N> pins)** Creates a *PwmTx* object. This is a templated class with the number of PWM pins as a template parameter. The PWM pin numbers are passed as an array to the constructor.
 
 ```C++
-/* Assings pins 21, 22, 23, 2, 3, 4, 5, 6, to the Pwm object for controlling PWM servos */
-actuators::Pwm<8> pwm({21, 22, 23, 2, 3, 4, 5, 6});
+/* Assigns pins 21, 22, 23, 2, 3, 4, 5, 6, to the PwmTx object for controlling PWM servos */
+bfs::PwmTx<8> pwm({21, 22, 23, 2, 3, 4, 5, 6});
 ```
 
 **void Begin()** Initializes the PWM pins.

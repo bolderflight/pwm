@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.00
+- Updated to namespace *bfs*
+- Renamed *Pwm* to *PwmTx* in case we write a *PwmRx* library in the future
+
 ## v1.0.5
 - Updated for core v2.0.4
 
