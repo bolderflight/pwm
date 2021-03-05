@@ -5,7 +5,6 @@ Lint:
   stage: lint
   tags:
     - bfs
-    - mk66fx1m0
   script: 
-    - cpplint.py --verbose=0 include/pwm/pwm.h
+    - cpplint --verbose=0 include/pwm/pwm.h
   
