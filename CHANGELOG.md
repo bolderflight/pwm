@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.0.1
+- Updated pwm pin numbers to int8_t
+
 ## v3.0.0
 - Updated to use a vector for entering the pin numbers.
 

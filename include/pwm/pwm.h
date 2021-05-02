@@ -36,7 +36,7 @@ namespace bfs {
 
 class PwmTx {
  public:
-  void Begin(std::span<int> pins) {
+  void Begin(std::span<int8_t> pins) {
     /* Assign the pins */
     pins_.resize(pins.size());
     for (std::size_t i = 0; i < pins.size(); i++) {
@@ -75,7 +75,7 @@ class PwmTx {
 
  private:
   /* Pin numbers */
-  std::vector<int> pins_;
+  std::vector<int8_t> pins_;
   /* PWM resolution */
   static constexpr int PWM_RESOLUTION_ = 16;
   /* PWM bits */
