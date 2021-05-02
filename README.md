@@ -39,17 +39,17 @@ This library is within the namespace *bfs*
 
 # Methods
 
-**PwmTx<int N>(std::array<int, N> pins)** Creates a *PwmTx* object. This is a templated class with the number of PWM pins as a template parameter. The PWM pin numbers are passed as an array to the constructor.
+**PwmTx** Creates a *PwmTx* object.
 
 ```C++
-/* Assigns pins 21, 22, 23, 2, 3, 4, 5, 6, to the PwmTx object for controlling PWM servos */
-bfs::PwmTx<8> pwm({21, 22, 23, 2, 3, 4, 5, 6});
+bfs::PwmTx pwm;
 ```
 
-**void Begin()** Initializes the PWM pins.
+**void Begin(std::span<int> pins)** Initializes the PWM pins. The PWM pin numbers are passed as a span to this method.
 
 ```C++
-pwm.Begin();
+std::vector<int> pins({21, 22, 23, 2, 3, 4, 5, 6});
+pwm.Begin(pins);
 ```
 
 **void frequency_hz(float val)** Enables changing the update frequency for the PWM commands. By default, this frequency is 50 Hz. Check with your servo or ESC manufacturer for supported frequencies.
@@ -70,14 +70,14 @@ std::cout << pwm.frequency_hz() << std::endl;
 pwm.Write();
 ```
 
-**void tx_channels(const std::array<uint16_t, N> &val)** Sets the channel data to be transmitted. Note that the length of the array should be the same as the number of pins.
+**void tx_channels(std::span<uint16_t> val)** Sets the channel data to be transmitted.
 
 ```C++
 pwm.tx_channels(pwm_tx_data);
 ```
 
-**std::array<uint16_t, N> tx_channels()** Returns the array of channel data to be transmitted. Note that the length of the returned array is the same as the number of pins.
+**std::vector<uint16_t> tx_channels()** Returns the vector of channel data to be transmitted.
 
 ```C++
-std::array<uint16_t, 8> pwm_tx_data = pwm.tx_channels();
+std::vector<uint16_t> pwm_tx_data = pwm.tx_channels();
 ```

@@ -26,26 +26,33 @@
 #ifndef INCLUDE_PWM_PWM_H_
 #define INCLUDE_PWM_PWM_H_
 
-#include <array>
+#include <span>
+#include <vector>
 #include <cmath>
+#include <algorithm>
 #include "core/core.h"
 
 namespace bfs {
 
-template<int N>
 class PwmTx {
  public:
-  explicit PwmTx(std::array<int, N> pins) : pins_(pins) {}
-  void Begin() {
+  void Begin(std::span<int> pins) {
+    /* Assign the pins */
+    pins_.resize(pins.size());
+    for (std::size_t i = 0; i < pins.size(); i++) {
+      pins_[i] = pins[i];
+    }
+    /* Set the tx_channels size */
+    tx_channels_.resize(pins_.size());
     /* Set the resolution */
     analogWriteResolution(PWM_RESOLUTION_);
     /* Set the frequency */
-    for (auto const & pin : pins_) {
+    for (const auto & pin : pins_) {
       analogWriteFrequency(pin, pwm_frequency_hz_);
     }
   }
   void Write() {
-    for (std::size_t i = 0; i < N; i++) {
+    for (std::size_t i = 0; i < pins_.size(); i++) {
       analogWrite(pins_[i], static_cast<float>(tx_channels_[i]) /
         pwm_period_us_ * MAX_PWM_VAL_);
     }
@@ -58,12 +65,17 @@ class PwmTx {
     }
   }
   inline float frequency_hz() const {return pwm_frequency_hz_;}
-  inline std::array<uint16_t, N> tx_channels() const {return tx_channels_;}
-  void tx_channels(const std::array<uint16_t, N> &val) {tx_channels_ = val;}
+  inline std::vector<uint16_t> tx_channels() const {return tx_channels_;}
+  void tx_channels(std::span<uint16_t> val) {
+    std::size_t len = std::min(tx_channels_.size(), val.size());
+    for (std::size_t i = 0; i < len; i++) {
+      tx_channels_[i] = val[i];
+    }
+  }
 
  private:
   /* Pin numbers */
-  std::array<int, N> pins_;
+  std::vector<int> pins_;
   /* PWM resolution */
   static constexpr int PWM_RESOLUTION_ = 16;
   /* PWM bits */
@@ -74,7 +86,7 @@ class PwmTx {
   /* PWM period */
   float pwm_period_us_ = 1.0f / pwm_frequency_hz_ * 1000000.0f;
   /* TX data */
-  std::array<uint16_t, N> tx_channels_;
+  std::vector<uint16_t> tx_channels_;
 };
 
 }  // namespace bfs

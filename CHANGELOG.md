@@ -1,6 +1,9 @@
 # Changelog
 
-## v2.00
+## v3.0.0
+- Updated to use a vector for entering the pin numbers.
+
+## v2.0.0
 - Updated to namespace *bfs*
 - Renamed *Pwm* to *PwmTx* in case we write a *PwmRx* library in the future
 

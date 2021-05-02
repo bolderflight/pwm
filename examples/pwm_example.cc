@@ -25,12 +25,13 @@
 
 #include "pwm/pwm.h"
 
-bfs::PwmTx<8> pwm({21, 22, 23, 2, 3, 4, 5, 6});
+bfs::PwmTx pwm;
 
 int main() {
   Serial.begin(115200);
-  pwm.Begin();
-  std::array<uint16_t, 8> cmds;
+  std::vector<int> pins({21, 22, 23, 2, 3, 4, 5, 6});
+  pwm.Begin(pins);
+  uint16_t cmds[8];
   cmds[0] = 1000;
   cmds[1] = 1125;
   cmds[2] = 1250;
