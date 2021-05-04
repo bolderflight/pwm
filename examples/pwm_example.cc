@@ -25,23 +25,39 @@
 
 #include "pwm/pwm.h"
 
-bfs::PwmTx pwm;
+/* PWM object */
+std::array<int8_t, 6> pins = {21, 22, 23, 2, 3, 4};
+bfs::PwmTx<pins.size()> pwm;
 
 int main() {
+  /* Serial to display data */
   Serial.begin(115200);
-  std::vector<int> pins({21, 22, 23, 2, 3, 4, 5, 6});
-  pwm.Begin(pins);
-  uint16_t cmds[8];
-  cmds[0] = 1000;
-  cmds[1] = 1125;
-  cmds[2] = 1250;
-  cmds[3] = 1375;
-  cmds[4] = 1500;
-  cmds[5] = 1625;
-  cmds[6] = 1750;
-  cmds[7] = 2000;
-  pwm.tx_channels(cmds);
+  while(!Serial) {}
+  /* Config */
+  bfs::EffectorConfig<pins.size()> config = {
+    .hw = pins,
+    .effectors = {
+      {
+        .type = bfs::SERVO,
+        .ch = 1,
+        .min = -20,
+        .max = 20,
+        .failsafe = 0,
+        .num_coef = 2,
+        .poly_coef = {500, 1500}
+      }
+    }
+  };
+  if (!pwm.Init(config)) {
+    Serial.println("Unable to init PWM output");
+    while (1) {}
+  }
+  /* Enable motors and servos */
+  pwm.EnableMotors();
+  pwm.EnableServos();
+  /* Issue a command */
+  std::array<float, 1> cmd = {0.5};
+  pwm.Cmd(cmd);
   pwm.Write();
-
   while (1) {}
 }
