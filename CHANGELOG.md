@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.0.0
+- Updated to conform to the Effector interface
+
 ## v3.0.1
 - Updated pwm pin numbers to int8_t
 
