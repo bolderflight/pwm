@@ -5,7 +5,7 @@ if (DEFINED MCU)
 endif()
 # Project information
 project(Pwm
-	VERSION 4.0.1
+	VERSION 4.0.2
 	DESCRIPTION "PWM actuator library"
 	LANGUAGES CXX
 )
