@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.0.2
+- Pulling in effector v6.0.2
+
 ## v4.0.1
 - Fixed constness of std::span
 
