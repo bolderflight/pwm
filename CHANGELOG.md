@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.0.3
+- Update for effector v6.1.0
+
 ## v4.0.2
 - Pulling in effector v6.0.2
 
