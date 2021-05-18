@@ -5,7 +5,7 @@ if (DEFINED MCU)
 endif()
 # Project information
 project(Pwm
-	VERSION 4.0.3
+	VERSION 4.0.4
 	DESCRIPTION "PWM actuator library"
 	LANGUAGES CXX
 )
@@ -25,7 +25,7 @@ if (DEFINED MCU)
 	FetchContent_Declare(
 		effector
 		GIT_REPOSITORY 	https://github.com/bolderflight/effector.git
-		GIT_TAG v6.1.0
+		GIT_TAG v6.1.3
 	)
 	FetchContent_MakeAvailable(effector)
   # Fetch polytools

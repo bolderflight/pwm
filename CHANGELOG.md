@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.0.4
+- Update for effector v6.1.3, which adds a check to see whether an effector has been configured.
+
 ## v4.0.3
 - Update for effector v6.1.0
 
