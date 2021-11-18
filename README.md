@@ -37,61 +37,34 @@ The *pwm_example* target creates an executable for communicating with PWM servos
 # Namespaces
 This library is within the namespace *bfs*
 
-# Methods
-This driver conforms to the [Effector interface](https://github.com/bolderflight/effector); please refer to those documents for information on the *EffectorConfig* and struct.
+# PwmTx
 
-**bool Init(const EffectorConfig &ref)** Initializes the PWM pins. Returns true on success.
+**PwmTx** This class is templated with the number of PWM pins.
 
 ```C++
-/* PWM object */
 std::array<int8_t, 6> pins = {21, 22, 23, 2, 3, 4};
 bfs::PwmTx<pins.size()> pwm;
-/* Config */
-bfs::EffectorConfig<pins.size()> config = {
-   .hw = pins,
-   .effectors = {
-   {
-      .type = bfs::SERVO,
-      .ch = 1,
-      .min = -20,
-      .max = 20,
-      .failsafe = 0,
-      .num_coef = 2,
-      .poly_coef = {500, 1500}
-   }
-   }
-};
-if (!pwm.Init(config)) {
-   Serial.println("Unable to init PWM output");
-   while (1) {}
-}
 ```
 
-**void Cmd(std::span<float> cmds)** Issues angle commands, which are converted to PWM commands and stored.
+**void Init(const std::array<int8_t, N> &pins)** Initializes the PWM pins given an array of pin numbers.
 
 ```C++
-cmds[0] = data.throttle;
-pwm.Cmd(cmds);
+pwm.Init(pins);
 ```
 
-**void Write()** Sends the stored commands to the servos. This method should be called every time the commands change.
+**void Write()** Sends the PWM commands to the servos.
 
 ```C++
 pwm.Write();
 ```
 
-**void EnableMotors()** Enables motors to output commands.
+**static constexpr int8_t NUM_CH** Returns the number of PWM channels.
+
+**void ch(const std::array<int16_t, N> &ref)** Updates the PWM commands.
 
 ```C++
-pwm.EnableMotors();
+std::array<int16_t, pwm.NUM_CH> cmd = {1000, 1200, 1300, 1400, 1500, 1600};
+pwm.ch(cmd);
 ```
 
-**void DisableMotors()** Disables motors from outputting commands, the failsafe command is sent instead.
-
-**void EnableServos()** Enables servos to output commands.
-
-```C++
-pwm.EnableServos();
-```
-
-**void DisableServos()** Disables servos from outputting commands, the failsafe command is sent instead.
+**std::array<int16_t, N> ch()** Returns an array of the PWM commands.

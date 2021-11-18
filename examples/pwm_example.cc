@@ -33,31 +33,10 @@ int main() {
   /* Serial to display data */
   Serial.begin(115200);
   while(!Serial) {}
-  /* Config */
-  bfs::EffectorConfig<pins.size()> config = {
-    .hw = pins,
-    .effectors = {
-      {
-        .type = bfs::SERVO,
-        .ch = 1,
-        .min = -20,
-        .max = 20,
-        .failsafe = 0,
-        .num_coef = 2,
-        .poly_coef = {500, 1500}
-      }
-    }
-  };
-  if (!pwm.Init(config)) {
-    Serial.println("Unable to init PWM output");
-    while (1) {}
-  }
-  /* Enable motors and servos */
-  pwm.EnableMotors();
-  pwm.EnableServos();
+  pwm.Init(pins);
   /* Issue a command */
-  std::array<float, 1> cmd = {0.5};
-  pwm.Cmd(cmd);
+  std::array<int16_t, pwm.NUM_CH> cmd = {1000, 1200, 1300, 1400, 1500, 1600};
+  pwm.ch(cmd);
   pwm.Write();
   while (1) {}
 }
