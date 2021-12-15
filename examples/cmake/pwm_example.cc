@@ -23,20 +23,20 @@
 * IN THE SOFTWARE.
 */
 
-#include "pwm/pwm.h"
+#include "pwm.h"
 
 /* PWM object */
-std::array<int8_t, 6> pins = {21, 22, 23, 2, 3, 4};
-bfs::PwmTx<pins.size()> pwm;
+int8_t pins[6] = {21, 22, 23, 2, 3, 4};
+bfs::PwmTx<sizeof(pins), 16> pwm(pins);
 
 int main() {
   /* Serial to display data */
   Serial.begin(115200);
   while(!Serial) {}
-  pwm.Init(pins);
+  pwm.Begin();
   /* Issue a command */
-  std::array<int16_t, pwm.NUM_CH> cmd = {1000, 1200, 1300, 1400, 1500, 1600};
-  pwm.ch(cmd);
+  int16_t cmd[6] = {1000, 1200, 1300, 1400, 1500, 1600};
+  pwm.ch(cmd, 6);
   pwm.Write();
   while (1) {}
 }

@@ -12,7 +12,7 @@ if (DEFINED MCU)
   set(CMAKE_TOOLCHAIN_FILE "${mcu_support_SOURCE_DIR}/cmake/cortex.cmake")
   # Project information
   project(Pwm
-    VERSION 5.1.0
+    VERSION 6.0.0
     DESCRIPTION "PWM actuator library"
     LANGUAGES CXX
   )
@@ -34,12 +34,12 @@ if (DEFINED MCU)
       core
   )
   # Setup include directories 
-  target_include_directories(pwm INTERFACE include/)
+  target_include_directories(pwm INTERFACE src/)
 
   # Example and test if this project is built separately
   if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
     # Add the example target
-    add_executable(pwm_example examples/pwm_example.cc)
+    add_executable(pwm_example examples/cmake/pwm_example.cc)
     # Add the includes
     target_include_directories(pwm_example PUBLIC 
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
