@@ -1,5 +1,8 @@
 # Changelog
 
+## v5.1.0
+- Updated to use mcu-support repo
+
 ## v5.0.0
 - Moving away from Effector interface
 

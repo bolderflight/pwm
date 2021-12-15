@@ -27,6 +27,7 @@
 #define INCLUDE_PWM_PWM_H_
 
 #include <array>
+#include <cmath>
 #include "core/core.h"
 
 namespace bfs {

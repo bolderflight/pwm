@@ -1,54 +1,57 @@
-cmake_minimum_required(VERSION 3.13)
+# v3.14 required for FetchContent_MakeAvailable
+cmake_minimum_required(VERSION 3.14)
 if (DEFINED MCU)
-	# Setting up the toolchain
-	set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/cmake/cortex.cmake")
-endif()
-# Project information
-project(Pwm
-	VERSION 5.0.0
-	DESCRIPTION "PWM actuator library"
-	LANGUAGES CXX
-)
-if (DEFINED MCU)
-	# Grab the processor and set up definitions and compile options
-	include(${CMAKE_SOURCE_DIR}/cmake/config_mcu.cmake)
-	configMcu(${MCU})
-	include(FetchContent)
+  include(FetchContent)
+  FetchContent_Declare(
+    mcu_support
+    GIT_REPOSITORY https://github.com/bolderflight/mcu-support.git
+    GIT_TAG v1.0.0
+  )
+  FetchContent_MakeAvailable(mcu_support)
+  # Setting up the toolchain
+  set(CMAKE_TOOLCHAIN_FILE "${mcu_support_SOURCE_DIR}/cmake/cortex.cmake")
+  # Project information
+  project(Pwm
+    VERSION 5.1.0
+    DESCRIPTION "PWM actuator library"
+    LANGUAGES CXX
+  )
+  # Grab the processor and set up definitions and compile options
+  include(${mcu_support_SOURCE_DIR}/cmake/config_mcu.cmake)
+  configMcu(${MCU} ${mcu_support_SOURCE_DIR})
   # Fetch core
-	FetchContent_Declare(
-		core
-		GIT_REPOSITORY 	https://github.com/bolderflight/core.git
-		GIT_TAG v2.0.5
-	)
-	FetchContent_MakeAvailable(core)
-	# Add the library target
-	add_library(pwm INTERFACE)
-	# Link libraries
-	target_link_libraries(pwm
-		INTERFACE
-			core
-	)
-	# Setup include directories 
-	target_include_directories(pwm INTERFACE include/)
+  FetchContent_Declare(
+    core
+    GIT_REPOSITORY https://github.com/bolderflight/core.git
+    GIT_TAG v3.0.2
+  )
+  FetchContent_MakeAvailable(core)
+  # Add the library target
+  add_library(pwm INTERFACE)
+  # Link libraries
+  target_link_libraries(pwm
+    INTERFACE
+      core
+  )
+  # Setup include directories 
+  target_include_directories(pwm INTERFACE include/)
 
-endif()
-# Example and test if this project is built separately
-if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
-	if (DEFINED MCU)		
-		# Add the example target
-		add_executable(pwm_example examples/pwm_example.cc)
-		# Add the includes
-		target_include_directories(pwm_example PUBLIC 
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-			$<INSTALL_INTERFACE:include>
-		)
-		# Link libraries to the example target
-		target_link_libraries(pwm_example
-			PRIVATE 
-				pwm
-		)
-		# Add hex and upload targets
-		include(${CMAKE_SOURCE_DIR}/cmake/flash_mcu.cmake)
-		FlashMcu(pwm_example ${MCU})
-	endif()
+  # Example and test if this project is built separately
+  if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
+    # Add the example target
+    add_executable(pwm_example examples/pwm_example.cc)
+    # Add the includes
+    target_include_directories(pwm_example PUBLIC 
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>
+    )
+    # Link libraries to the example target
+    target_link_libraries(pwm_example
+      PRIVATE 
+        pwm
+    )
+    # Add hex and upload targets
+    include(${mcu_support_SOURCE_DIR}/cmake/flash_mcu.cmake)
+    FlashMcu(pwm_example ${MCU} ${mcu_support_SOURCE_DIR})
+  endif()
 endif()
