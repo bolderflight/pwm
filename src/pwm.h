@@ -29,28 +29,23 @@
 #if defined(ARDUINO)
 #include <Arduino.h>
 #else
-#include <algorithm>
-#include <cmath>
 #include "core/core.h"
 #endif
+#include <algorithm>
+#include <cmath>
 
 namespace bfs {
 
-template<size_t N, int RESOLUTION>
+template<size_t N>
 class PwmTx {
  private:
   /* Pin numbers */
   int8_t pins_[N];
   /* PWM resolution */
-  static constexpr int PWM_RESOLUTION_ = RESOLUTION;
+  static constexpr int PWM_RESOLUTION_ = 16;
   /* PWM bits */
-  #if defined(ARDUINO)
-  static constexpr float MAX_PWM_VAL_ =
-    pow(2.0f, static_cast<float>(PWM_RESOLUTION_)) - 1.0f;
-  #else
   static constexpr float MAX_PWM_VAL_ =
     std::pow(2.0f, static_cast<float>(PWM_RESOLUTION_)) - 1.0f;
-  #endif
   /* PWM frequency */
   static constexpr float PWM_FREQUENCY_HZ_ = 50;
   /* PWM period */
@@ -87,11 +82,7 @@ class PwmTx {
   }
   int8_t ch(int16_t const * const data, const int8_t len) {
     if (!data) {return -1;}
-    #if defined(ARDUINO)
-    int8_t cpy_len = min(NUM_CH_, len);
-    #else
     int8_t cpy_len = std::min(NUM_CH_, len);
-    #endif
     memcpy(ch_, data, cpy_len * sizeof(int16_t));
     return cpy_len;
   }

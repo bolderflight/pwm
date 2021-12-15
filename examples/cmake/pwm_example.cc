@@ -27,7 +27,7 @@
 
 /* PWM object */
 int8_t pins[6] = {21, 22, 23, 2, 3, 4};
-bfs::PwmTx<sizeof(pins), 16> pwm(pins);
+bfs::PwmTx<sizeof(pins)> pwm(pins);
 
 int main() {
   /* Serial to display data */
