@@ -36,7 +36,7 @@
 
 namespace bfs {
 
-template<std::size_t N, int RESOLUTION>
+template<size_t N, int RESOLUTION>
 class PwmTx {
  private:
   /* Pin numbers */
