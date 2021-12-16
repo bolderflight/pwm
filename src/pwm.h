@@ -31,7 +31,6 @@
 #else
 #include "core/core.h"
 #endif
-#include <algorithm>
 #include <cmath>
 
 namespace bfs {
