@@ -30,13 +30,13 @@ int8_t pins[6] = {21, 22, 23, 2, 3, 4};
 bfs::PwmTx<sizeof(pins)> pwm(pins);
 
 int main() {
-  // /* Serial to display data */
-  // Serial.begin(115200);
-  // while(!Serial) {}
-  // pwm.Begin();
-  // /* Issue a command */
-  // int16_t cmd[6] = {1000, 1200, 1300, 1400, 1500, 1600};
-  // pwm.ch(cmd, 6);
-  // pwm.Write();
+  /* Serial to display data */
+  Serial.begin(115200);
+  while (!Serial) {}
+  pwm.Begin();
+  /* Issue a command */
+  int16_t cmd[6] = {1000, 1200, 1300, 1400, 1500, 1600};
+  pwm.ch(cmd);
+  pwm.Write();
   while (1) {}
 }

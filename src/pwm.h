@@ -36,60 +36,44 @@
 
 namespace bfs {
 
-template<size_t N>
+template<int8_t N, int8_t RES = 16>
 class PwmTx {
  private:
   /* Pin numbers */
   int8_t pins_[N];
   /* PWM resolution */
-  int8_t pwm_resolution_ = 16;
+  static constexpr int8_t RES_ = RES;
   /* PWM bits */
-  float max_pwm_val_;
+  static constexpr float MAX_VAL_ =
+    std::pow(2.0f, static_cast<float>(RES_)) - 1.0f;
   /* PWM frequency */
-  float default_pwm_freq_hz_ = 50;
-  float pwm_freq_hz_[N];
+  float pwm_freq_hz_ = 50;
   /* PWM period */
-  float pwm_period_us_[N];
-  /* Number of channels */
-  static constexpr int8_t NUM_CH_ = N;
+  float pwm_period_us_;
   /* TX data */
   int16_t ch_[N];
 
  public:
   explicit PwmTx(const int8_t (&pins)[N]) {
     memcpy(pins_, pins, N);
-    for (size_t i = 0; i < N; i++) {
-      pwm_freq_hz_[i] = default_pwm_freq_hz_;
-    }
   }
   void Begin() {
-    Begin(pwm_freq_hz_, pwm_resolution_);
+    Begin(pwm_freq_hz_);
   }
-  void Begin(const int8_t res) {
-    Begin(pwm_freq_hz_, res);
-  }
-  void Begin(const float freq[N]) {
-    Begin(freq, pwm_resolution_);
-  }
-  void Begin(const float (&freq)[N], const int8_t res) {
-    /* Set the resolution */
-    pwm_resolution_ = res;
-    analogWriteResolution(res);
-    /* Max PWM value */
-    max_pwm_val_ = std::pow(2.0f, static_cast<float>(pwm_resolution_)) - 1.0f;
+  void Begin(const float freq) {
     /* Set the period and frequency */
     for (size_t i = 0; i < N; i++) {
-      pwm_period_us_[i] = 1.0f / freq[i] * 1000000.0f;
-      analogWriteFrequency(pins_[i], freq[N]);
+      pwm_period_us_ = 1.0f / freq * 1000000.0f;
+      analogWriteFrequency(pins_[i], freq);
     }
   }
   void Write() {
     for (size_t i = 0; i < N; i++) {
       analogWrite(pins_[i], static_cast<float>(ch_[i]) /
-                  pwm_period_us_ * max_pwm_val_);
+                  pwm_period_us_ * MAX_VAL_);
     }
   }
-  static constexpr int8_t NUM_CH() {return NUM_CH_;}
+  static constexpr int8_t NUM_CH() {return N;}
   void ch(const int16_t (&data)[N]) {
     memcpy(ch_, data, N * sizeof(int16_t));
   }

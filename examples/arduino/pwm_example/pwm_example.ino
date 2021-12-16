@@ -32,11 +32,11 @@ bfs::PwmTx<sizeof(pins)> pwm(pins);
 void setup() {
   /* Serial to display data */
   Serial.begin(115200);
-  while(!Serial) {}
+  while (!Serial) {}
   pwm.Begin();
   /* Issue a command */
   int16_t cmd[6] = {1000, 1200, 1300, 1400, 1500, 1600};
-  pwm.ch(cmd, 6);
+  pwm.ch(cmd);
   pwm.Write();
 }
 
