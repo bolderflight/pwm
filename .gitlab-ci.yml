@@ -6,5 +6,5 @@ Lint:
   tags:
     - bfs
   script: 
-    - cpplint --verbose=0 include/pwm/pwm.h
+    - cpplint --verbose=0 src/pwm.h
   

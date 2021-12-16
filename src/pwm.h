@@ -23,8 +23,8 @@
 * IN THE SOFTWARE.
 */
 
-#ifndef INCLUDE_PWM_PWM_H_
-#define INCLUDE_PWM_PWM_H_
+#ifndef SRC_PWM_H_
+#define SRC_PWM_H_
 
 #if defined(ARDUINO)
 #include <Arduino.h>
@@ -42,52 +42,59 @@ class PwmTx {
   /* Pin numbers */
   int8_t pins_[N];
   /* PWM resolution */
-  static constexpr int PWM_RESOLUTION_ = 16;
+  int8_t pwm_resolution_ = 16;
   /* PWM bits */
-  static constexpr float MAX_PWM_VAL_ =
-    std::pow(2.0f, static_cast<float>(PWM_RESOLUTION_)) - 1.0f;
+  float max_pwm_val_;
   /* PWM frequency */
-  static constexpr float PWM_FREQUENCY_HZ_ = 50;
+  float default_pwm_freq_hz_ = 50;
+  float pwm_freq_hz_[N];
   /* PWM period */
-  static constexpr float PWM_PERIOD_US_ = 1.0f / PWM_FREQUENCY_HZ_ *
-                                          1000000.0f;
+  float pwm_period_us_[N];
   /* Number of channels */
   static constexpr int8_t NUM_CH_ = N;
   /* TX data */
   int16_t ch_[N];
 
  public:
-  explicit PwmTx(int8_t pins[N]) {
+  explicit PwmTx(const int8_t (&pins)[N]) {
     memcpy(pins_, pins, N);
+    for (size_t i = 0; i < N; i++) {
+      pwm_freq_hz_[i] = default_pwm_freq_hz_;
+    }
   }
   void Begin() {
+    Begin(pwm_freq_hz_, pwm_resolution_);
+  }
+  void Begin(const int8_t res) {
+    Begin(pwm_freq_hz_, res);
+  }
+  void Begin(const float freq[N]) {
+    Begin(freq, pwm_resolution_);
+  }
+  void Begin(const float (&freq)[N], const int8_t res) {
     /* Set the resolution */
-    analogWriteResolution(PWM_RESOLUTION_);
-    /* Set the frequency */
+    pwm_resolution_ = res;
+    analogWriteResolution(res);
+    /* Max PWM value */
+    max_pwm_val_ = std::pow(2.0f, static_cast<float>(pwm_resolution_)) - 1.0f;
+    /* Set the period and frequency */
     for (size_t i = 0; i < N; i++) {
-      analogWriteFrequency(pins_[i], PWM_FREQUENCY_HZ_);
+      pwm_period_us_[i] = 1.0f / freq[i] * 1000000.0f;
+      analogWriteFrequency(pins_[i], freq[N]);
     }
   }
   void Write() {
     for (size_t i = 0; i < N; i++) {
       analogWrite(pins_[i], static_cast<float>(ch_[i]) /
-                  PWM_PERIOD_US_ * MAX_PWM_VAL_);
+                  pwm_period_us_ * max_pwm_val_);
     }
   }
   static constexpr int8_t NUM_CH() {return NUM_CH_;}
-  bool ch(const int8_t idx, const int16_t val) {
-    if ((idx < 0) || (idx >= NUM_CH_)) {return false;}
-    ch_[idx] = val;
-    return true;
-  }
-  int8_t ch(int16_t const * const data, const int8_t len) {
-    if (!data) {return -1;}
-    int8_t cpy_len = std::min(NUM_CH_, len);
-    memcpy(ch_, data, cpy_len * sizeof(int16_t));
-    return cpy_len;
+  void ch(const int16_t (&data)[N]) {
+    memcpy(ch_, data, N * sizeof(int16_t));
   }
 };
 
 }  // namespace bfs
 
-#endif  // INCLUDE_PWM_PWM_H_
+#endif  // SRC_PWM_H_
