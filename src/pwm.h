@@ -23,54 +23,61 @@
 * IN THE SOFTWARE.
 */
 
-#ifndef INCLUDE_PWM_PWM_H_
-#define INCLUDE_PWM_PWM_H_
+#ifndef SRC_PWM_H_
+#define SRC_PWM_H_
 
-#include <array>
-#include <cmath>
+#if defined(ARDUINO)
+#include <Arduino.h>
+#else
 #include "core/core.h"
+#endif
+#include <cstddef>
+#include <cstdint>
+#include <cmath>
+#include <array>
 
 namespace bfs {
 
-template<std::size_t N>
+template<int8_t N, int8_t RES = 16>
 class PwmTx {
- public:
-  void Init(const std::array<int8_t, N> &pins) {
-    pins_ = pins;
-    /* Set the resolution */
-    analogWriteResolution(PWM_RESOLUTION_);
-    /* Set the frequency */
-    for (const auto &pin : pins_) {
-      analogWriteFrequency(pin, PWM_FREQUENCY_HZ_);
-    }
-  }
-  void Write() {
-    for (std::size_t i = 0; i < pins_.size(); i++) {
-      analogWrite(pins_[i], static_cast<float>(ch_[i]) /
-                  PWM_PERIOD_US_ * MAX_PWM_VAL_);
-    }
-  }
-  static constexpr int8_t NUM_CH = N;
-  inline void ch(const std::array<int16_t, N> &ref) {ch_ = ref;}
-  inline std::array<int16_t, N> ch() const {return ch_;}
-
  private:
   /* Pin numbers */
   std::array<int8_t, N> pins_;
   /* PWM resolution */
-  static constexpr int PWM_RESOLUTION_ = 16;
+  static constexpr int8_t RES_ = RES;
   /* PWM bits */
-  static constexpr float MAX_PWM_VAL_ =
-    std::pow(2.0f, static_cast<float>(PWM_RESOLUTION_)) - 1.0f;
+  static constexpr float MAX_VAL_ =
+    std::pow(2.0f, static_cast<float>(RES_)) - 1.0f;
   /* PWM frequency */
-  static constexpr float PWM_FREQUENCY_HZ_ = 50;
+  float pwm_freq_hz_ = 50;
   /* PWM period */
-  static constexpr float PWM_PERIOD_US_ = 1.0f / PWM_FREQUENCY_HZ_ *
-                                          1000000.0f;
+  float pwm_period_us_;
   /* TX data */
   std::array<int16_t, N> ch_;
+
+ public:
+  explicit PwmTx(const std::array<int8_t, N> &pins) : pins_(pins) {}
+  void Begin() {
+    Begin(pwm_freq_hz_);
+  }
+  void Begin(const float freq) {
+    pwm_period_us_ = 1.0f / freq * 1000000.0f;
+    /* Set the period and frequency */
+    for (size_t i = 0; i < N; i++) {
+      analogWriteFrequency(pins_[i], freq);
+    }
+  }
+  void Write() {
+    for (size_t i = 0; i < N; i++) {
+      analogWrite(pins_[i], static_cast<float>(ch_[i]) /
+                  pwm_period_us_ * MAX_VAL_);
+    }
+  }
+  static constexpr int8_t NUM_CH() {return N;}
+  inline void ch(const std::array<int16_t, N> &cmds) {ch_ = cmds;}
+  inline std::array<int16_t, N> ch() const {return ch_;}
 };
 
 }  // namespace bfs
 
-#endif  // INCLUDE_PWM_PWM_H_
+#endif  // SRC_PWM_H_

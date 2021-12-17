@@ -1,5 +1,8 @@
 # Changelog
 
+## v6.0.0
+- Updated to work with Arduino and CMake
+
 ## v5.1.0
 - Updated to use mcu-support repo
 
