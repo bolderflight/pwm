@@ -63,12 +63,12 @@ class PwmTx {
   void Begin(const float freq) {
     pwm_period_us_ = 1.0f / freq * 1000000.0f;
     /* Set the period and frequency */
-    for (size_t i = 0; i < N; i++) {
+    for (std::size_t i = 0; i < N; i++) {
       analogWriteFrequency(pins_[i], freq);
     }
   }
   void Write() {
-    for (size_t i = 0; i < N; i++) {
+    for (std::size_t i = 0; i < N; i++) {
       analogWrite(pins_[i], static_cast<float>(ch_[i]) /
                   pwm_period_us_ * MAX_VAL_);
     }

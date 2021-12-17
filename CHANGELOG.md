@@ -1,5 +1,8 @@
 # Changelog
 
+## v6.0.1
+- size_t to std::size_t
+
 ## v6.0.0
 - Updated to work with Arduino and CMake
 
