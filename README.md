@@ -57,19 +57,19 @@ This library is within the namespace *bfs*
 
 # PwmTx
 
-**PwmTx(const int8_t (&pins)[N])** This class is templated with the number of PWM pins and takes an array of pin numbers as input.
+**PwmTx(const std::array<int8_t, N> &pins)** This class is templated with the number of PWM pins and takes an array of pin numbers as input.
 
 ```C++
-int8_t pins[6] = {21, 22, 23, 2, 3, 4};
-bfs::PwmTx<sizeof(pins)> pwm(pins);
+std::array<int8_t, 6> pins = {21, 22, 23, 2, 3, 4};
+bfs::PwmTx<pins.size()> pwm(pins);
 ```
 
 An optional template parameter is the PWM resolution.
 
 ```C++
 /* 12 bit PWM resolution */
-int8_t pins[6] = {21, 22, 23, 2, 3, 4};
-bfs::PwmTx<sizeof(pins), 12> pwm(pins);
+std::array<int8_t, 6> pins = {21, 22, 23, 2, 3, 4};
+bfs::PwmTx<pins.size(), 12> pwm(pins);
 ```
 
 By default the resolution is 16 bits.
@@ -90,9 +90,15 @@ pwm.Write();
 
 **static constexpr int8_t NUM_CH()** A constant defining the number of PWM channels, useful for defining arrays to write the data from.
 
-**void ch(const int16_t (&data)[N])** Sets the channel data to be transmitted, given an array of PWM commands.
+**void ch(const std::array<int16_t, N> &cmds)** Sets the channel data to be transmitted, given an array of PWM commands.
 
 ```C++
-int16_t cmds[6];
-pwm.ch(cmds);
+std::array<int16_t, 6> cmd = {1000, 1200, 1300, 1400, 1500, 1600};
+pwm.ch(cmd);
+```
+
+**std::array<int16_t, N> ch()** Returns the channel data to be transmitted.
+
+```C++
+std::array<int16_t, 6> cmd = pwm.ch();
 ```

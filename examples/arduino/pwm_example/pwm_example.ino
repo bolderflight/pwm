@@ -26,8 +26,8 @@
 #include "pwm.h"
 
 /* PWM object */
-int8_t pins[6] = {21, 22, 23, 2, 3, 4};
-bfs::PwmTx<sizeof(pins)> pwm(pins);
+std::array<int8_t, 6> pins = {21, 22, 23, 2, 3, 4};
+bfs::PwmTx<pins.size()> pwm(pins);
 
 void setup() {
   /* Serial to display data */
@@ -35,7 +35,7 @@ void setup() {
   while (!Serial) {}
   pwm.Begin();
   /* Issue a command */
-  int16_t cmd[6] = {1000, 1200, 1300, 1400, 1500, 1600};
+  std::array<int16_t, 6> cmd = {1000, 1200, 1300, 1400, 1500, 1600};
   pwm.ch(cmd);
   pwm.Write();
 }

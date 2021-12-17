@@ -31,7 +31,10 @@
 #else
 #include "core/core.h"
 #endif
+#include <cstddef>
+#include <cstdint>
 #include <cmath>
+#include <array>
 
 namespace bfs {
 
@@ -39,7 +42,7 @@ template<int8_t N, int8_t RES = 16>
 class PwmTx {
  private:
   /* Pin numbers */
-  int8_t pins_[N];
+  std::array<int8_t, N> pins_;
   /* PWM resolution */
   static constexpr int8_t RES_ = RES;
   /* PWM bits */
@@ -50,19 +53,17 @@ class PwmTx {
   /* PWM period */
   float pwm_period_us_;
   /* TX data */
-  int16_t ch_[N];
+  std::array<int16_t, N> ch_;
 
  public:
-  explicit PwmTx(const int8_t (&pins)[N]) {
-    memcpy(pins_, pins, N);
-  }
+  explicit PwmTx(const std::array<int8_t, N> &pins) : pins_(pins) {}
   void Begin() {
     Begin(pwm_freq_hz_);
   }
   void Begin(const float freq) {
+    pwm_period_us_ = 1.0f / freq * 1000000.0f;
     /* Set the period and frequency */
     for (size_t i = 0; i < N; i++) {
-      pwm_period_us_ = 1.0f / freq * 1000000.0f;
       analogWriteFrequency(pins_[i], freq);
     }
   }
@@ -73,9 +74,8 @@ class PwmTx {
     }
   }
   static constexpr int8_t NUM_CH() {return N;}
-  void ch(const int16_t (&data)[N]) {
-    memcpy(ch_, data, N * sizeof(int16_t));
-  }
+  inline void ch(const std::array<int16_t, N> &cmds) {ch_ = cmds;}
+  inline std::array<int16_t, N> ch() const {return ch_;}
 };
 
 }  // namespace bfs
