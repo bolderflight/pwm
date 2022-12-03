@@ -1,5 +1,8 @@
 # Changelog
 
+## v6.0.2
+- Bug fix with respect to setting analogWriteResolution
+
 ## v6.0.1
 - size_t to std::size_t
 

@@ -12,7 +12,7 @@ if (DEFINED MCU)
   set(CMAKE_TOOLCHAIN_FILE "${mcu_support_SOURCE_DIR}/cmake/cortex.cmake")
   # Project information
   project(Pwm
-    VERSION 6.0.1
+    VERSION 6.0.2
     DESCRIPTION "PWM actuator library"
     LANGUAGES CXX
   )
