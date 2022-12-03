@@ -59,6 +59,7 @@ class PwmTx {
   explicit PwmTx(const std::array<int8_t, N> &pins) : pins_(pins) {}
   void Begin() {
     Begin(pwm_freq_hz_);
+    analogWriteResolution(RES_);
   }
   void Begin(const float freq) {
     pwm_period_us_ = 1.0f / freq * 1000000.0f;
