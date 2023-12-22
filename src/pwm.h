@@ -59,10 +59,10 @@ class PwmTx {
   explicit PwmTx(const std::array<int8_t, N> &pins) : pins_(pins) {}
   void Begin() {
     Begin(pwm_freq_hz_);
-    analogWriteResolution(RES_);
   }
   void Begin(const float freq) {
     pwm_period_us_ = 1.0f / freq * 1000000.0f;
+	analogWriteResolution(RES_);
     /* Set the period and frequency */
     for (std::size_t i = 0; i < N; i++) {
       analogWriteFrequency(pins_[i], freq);
